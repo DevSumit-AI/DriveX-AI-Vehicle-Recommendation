@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>DriveX | Booking Confirmed</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .success-page {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 55px 20px;
+            background: radial-gradient(ellipse at 50% 0%, rgba(255, 90, 31, .13), transparent 55%);
+        }
+        
+        .success-card {
+            width: 100%;
+            max-width: 620px;
+            text-align: center;
+            padding: 45px;
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: 23px;
+            background: linear-gradient(145deg, #191d26, #101217);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, .3);
+            animation: successAppear .6s ease;
+        }
+        
+        @keyframes successAppear {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .success-icon {
+            width: 85px;
+            height: 85px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 25px;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 39px;
+            background: linear-gradient(135deg, #ff713d, #e9470e);
+            box-shadow: 0 0 45px rgba(255, 90, 31, .25);
+        }
+        
+        .success-card h1 {
+            font-size: clamp(32px, 5vw, 44px);
+            letter-spacing: -1.5px;
+            margin: 12px 0;
+        }
+        
+        .success-card>p {
+            color: #a0a5b1;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+        
+        .success-status {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 9px 16px;
+            color: #ff875d;
+            background: rgba(255, 90, 31, .1);
+            border: 1px solid rgba(255, 90, 31, .25);
+            border-radius: 30px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+        
+        .success-details {
+            margin: 25px 0;
+            padding: 22px;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, .025);
+        }
+        
+        .success-details h3 {
+            font-size: 16px;
+            margin-bottom: 18px;
+        }
+        
+        .success-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 13px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .07);
+            font-size: 12px;
+        }
+        
+        .success-row:last-child {
+            border-bottom: none;
+        }
+        
+        .success-row span:first-child {
+            color: #969ba8;
+        }
+        
+        .success-row span:last-child {
+            color: #fff;
+            font-weight: 700;
+            text-align: right;
+            overflow-wrap: anywhere;
+        }
+        
+        .success-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+        
+        .success-actions a {
+            flex: 1;
+            text-align: center;
+            padding: 14px 12px;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 800;
+            text-decoration: none;
+        }
+        
+        .success-primary {
+            background: linear-gradient(135deg, #ff713d, #ef460e);
+            color: white;
+        }
+        
+        .success-secondary {
+            border: 1px solid rgba(255, 255, 255, .15);
+            color: white;
+        }
+        
+        @media(max-width: 500px) {
+            .success-card {
+                padding: 28px 20px;
+            }
+            .success-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="/vehicles" class="logo">Drive<span>X</span></a>
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/vehicles">Vehicles</a>
+            <a href="/recommend">AI Recommendation</a>
+            <a href="/mytrips">My Trips</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+
+    <main class="success-page">
+
+        <section class="success-card">
+
+            <div class="success-icon">✓</div>
+
+            <span class="eyebrow">DRIVEX RESERVATION SYSTEM</span>
+
+            <h1>Booking <span>Confirmed!</span></h1>
+
+            <p>
+                Great choice! Your booking details have been successfully saved. Get ready for your next journey.
+            </p>
+
+            <div class="success-status">
+                ✓ BOOKING SAVED
+            </div>
+
+            <div class="success-details">
+
+                <h3>Reservation Details</h3>
+
+                <div class="success-row">
+                    <span>Selected Vehicle</span>
+                    <span>{{ vehicle }}</span>
+                </div>
+
+                <div class="success-row">
+                    <span>Pickup Date</span>
+                    <span>{{ pickup }}</span>
+                </div>
+
+                <div class="success-row">
+                    <span>Drop-off Date</span>
+                    <span>{{ dropoff }}</span>
+                </div>
+
+                <div class="success-row">
+                    <span>Payment Status</span>
+                    <span>Not collected</span>
+                </div>
+
+            </div>
+
+            <div class="success-actions">
+
+                <a href="/mytrips" class="success-primary">
+                    View My Trips →
+                </a>
+
+                <a href="/vehicles" class="success-secondary">
+                    Explore Vehicles
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <a href="/vehicles" class="logo">Drive<span>X</span></a>
+        <p>Drive beyond limits. Experience every journey.</p>
+        <small>© 2026 DriveX. All Rights Reserved.</small>
+    </footer>
+
+</body>
+
+</html>

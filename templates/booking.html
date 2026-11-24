@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DriveX | Complete Your Booking</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .booking-hero {
+            text-align: center;
+            padding: 65px 20px 35px;
+            background: radial-gradient(ellipse at top, rgba(255, 90, 31, .15), transparent 65%);
+        }
+        
+        .booking-hero h1 {
+            font-size: clamp(36px, 5vw, 52px);
+            margin: 15px 0;
+            letter-spacing: -1.5px;
+        }
+        
+        .booking-hero p {
+            color: var(--muted);
+            font-size: 13px;
+        }
+        
+        .booking-layout {
+            max-width: 1100px;
+            margin: 25px auto 85px;
+            padding: 0 25px;
+            display: grid;
+            grid-template-columns: 1.3fr .7fr;
+            gap: 25px;
+            align-items: start;
+        }
+        
+        .booking-panel,
+        .booking-summary {
+            background: linear-gradient(145deg, #191d26, #101217);
+            border: 1px solid rgba(255, 255, 255, .09);
+            border-radius: 20px;
+            padding: 32px;
+        }
+        
+        .booking-panel h2,
+        .booking-summary h2 {
+            font-size: 23px;
+            margin-bottom: 10px;
+        }
+        
+        .booking-subtitle {
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 28px;
+            line-height: 1.7;
+        }
+        
+        .booking-section {
+            margin: 32px 0 22px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .booking-section h3 {
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+        
+        .booking-section p {
+            color: var(--muted);
+            font-size: 11px;
+        }
+        
+        .booking-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 17px;
+        }
+        
+        .booking-field {
+            margin-bottom: 20px;
+        }
+        
+        .booking-field.full {
+            grid-column: 1 / -1;
+        }
+        
+        .booking-field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #e5e5e5;
+        }
+        
+        .booking-field input,
+        .booking-field select,
+        .booking-field textarea {
+            width: 100%;
+            min-height: 51px;
+            padding: 13px 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: #0b0d12;
+            color: white;
+            outline: none;
+            font-family: inherit;
+            font-size: 13px;
+            color-scheme: dark;
+        }
+        
+        .booking-field textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .booking-field input:focus,
+        .booking-field select:focus,
+        .booking-field textarea:focus {
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px rgba(255, 90, 31, .1);
+        }
+        
+        .booking-field small {
+            display: block;
+            margin-top: 7px;
+            font-size: 10px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+        
+        .booking-submit {
+            width: 100%;
+            border: none;
+            min-height: 54px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #ff713d, #ef460e);
+            color: white;
+            font-weight: 800;
+            font-size: 13px;
+            cursor: pointer;
+            transition: .3s;
+            margin-top: 10px;
+        }
+        
+        .booking-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 90, 31, .2);
+        }
+        
+        .booking-car-icon {
+            width: 55px;
+            height: 55px;
+            display: grid;
+            place-items: center;
+            border-radius: 15px;
+            background: rgba(255, 90, 31, .12);
+            color: #ff713d;
+            font-size: 27px;
+            margin-bottom: 23px;
+        }
+        
+        .booking-summary {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .booking-summary h3 {
+            font-size: 25px;
+            margin: 8px 0;
+            overflow-wrap: anywhere;
+        }
+        
+        .booking-summary p {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.8;
+        }
+        
+        .booking-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 25px 0;
+        }
+        
+        .booking-detail {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 17px 0;
+            font-size: 12px;
+        }
+        
+        .booking-detail span:first-child {
+            color: var(--muted);
+        }
+        
+        .booking-detail span:last-child {
+            font-weight: 700;
+            text-align: right;
+        }
+        
+        .booking-security {
+            padding: 14px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, .035);
+            color: #b0b4bf;
+            font-size: 11px;
+            line-height: 1.7;
+        }
+        
+        @media(max-width: 750px) {
+            .booking-layout {
+                grid-template-columns: 1fr;
+            }
+            .booking-summary {
+                position: static;
+            }
+        }
+        
+        @media(max-width: 480px) {
+            .booking-panel,
+            .booking-summary {
+                padding: 23px;
+            }
+            .booking-grid {
+                grid-template-columns: 1fr;
+            }
+            .booking-field.full {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="/vehicles" class="logo">Drive<span>X</span></a>
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/vehicles">Vehicles</a>
+            <a href="/recommend">AI Recommendation</a>
+            <a href="/mytrips">My Trips</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+
+    <section class="booking-hero">
+        <span class="eyebrow">YOUR JOURNEY STARTS HERE</span>
+
+        <h1>Complete Your <span>Booking.</span></h1>
+
+        <p>Provide your details and travel information to reserve your vehicle.</p>
+    </section>
+
+    <main class="booking-layout">
+
+        <section class="booking-panel">
+
+            <span class="eyebrow">RESERVATION DETAILS</span>
+
+            <h2>Book Your Vehicle</h2>
+
+            <p class="booking-subtitle">
+                Complete all required details to continue with your DriveX reservation.
+            </p>
+
+            <form method="POST" id="bookingForm">
+
+                <!-- CUSTOMER INFORMATION -->
+
+                <div class="booking-section">
+                    <h3>01. Customer Information</h3>
+                    <p>Enter your personal contact details.</p>
+                </div>
+
+                <div class="booking-grid">
+
+                    <div class="booking-field">
+                        <label for="full_name">Full Name *</label>
+                        <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" maxlength="100" required>
+                    </div>
+
+                    <div class="booking-field">
+                        <label for="phone">Mobile Number *</label>
+                        <input type="tel" id="phone" name="phone" placeholder="10-digit mobile number" pattern="[6-9][0-9]{9}" maxlength="10" required>
+                    </div>
+
+                    <div class="booking-field full">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email address" maxlength="120" required>
+                    </div>
+
+                </div>
+
+                <!-- IDENTITY VERIFICATION -->
+
+                <div class="booking-section">
+                    <h3>02. Identity Verification</h3>
+                    <p>Provide the required identity information.</p>
+                </div>
+
+                <div class="booking-grid">
+
+                    <div class="booking-field">
+                        <label for="aadhaar_last4">Aadhaar Last 4 Digits *</label>
+                        <input type="text" id="aadhaar_last4" name="aadhaar_last4" placeholder="XXXX" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" minlength="4" required>
+                        <small>Only the last four digits are requested. Never enter your full Aadhaar number.</small>
+                    </div>
+
+                    <div class="booking-field">
+                        <label for="driving_license">Driving Licence Number *</label>
+                        <input type="text" id="driving_license" name="driving_license" placeholder="Enter licence number" maxlength="30" required>
+                        <small>Enter your valid driving licence number.</small>
+                    </div>
+
+                </div>
+
+                <!-- TRAVEL INFORMATION -->
+
+                <div class="booking-section">
+                    <h3>03. Travel Information</h3>
+                    <p>Tell us where and when you want to travel.</p>
+                </div>
+
+                <div class="booking-grid">
+
+                    <div class="booking-field">
+                        <label for="pickup_location">Pickup Location *</label>
+                        <input type="text" id="pickup_location" name="pickup_location" placeholder="Enter pickup location" maxlength="200" required>
+                    </div>
+
+                    <div class="booking-field">
+                        <label for="destination">Destination *</label>
+                        <input type="text" id="destination" name="destination" placeholder="Where are you travelling?" maxlength="200" required>
+                    </div>
+
+                    <div class="booking-field">
+                        <label for="pickup">Pickup Date *</label>
+                        <input type="date" id="pickup" name="pickup" required>
+                    </div>
+
+                    <div class="booking-field">
+                        <label for="pickup_time">Pickup Time *</label>
+                        <input type="time" id="pickup_time" name="pickup_time" required>
+                    </div>
+
+                    <div class="booking-field">
+                        <label for="dropoff">Return Date *</label>
+                        <input type="date" id="dropoff" name="dropoff" required>
+                    </div>
+
+                    <div class="booking-field">
+                        <label for="dropoff_time">Return Time *</label>
+                        <input type="time" id="dropoff_time" name="dropoff_time" required>
+                    </div>
+
+                    <div class="booking-field">
+                        <label for="passengers">Number of Passengers *</label>
+                        <input type="number" id="passengers" name="passengers" min="1" max="10" value="2" required>
+                    </div>
+
+                    <div class="booking-field">
+                        <label for="trip_purpose">Trip Purpose *</label>
+                        <select id="trip_purpose" name="trip_purpose" required>
+                            <option value="">Select purpose</option>
+                            <option value="Tourism">Tourism</option>
+                            <option value="Business">Business</option>
+                            <option value="Personal">Personal</option>
+                            <option value="Family Trip">Family Trip</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- EMERGENCY INFORMATION -->
+
+                <div class="booking-section">
+                    <h3>04. Emergency & Additional Information</h3>
+                    <p>Additional information for a safer journey.</p>
+                </div>
+
+                <div class="booking-grid">
+
+                    <div class="booking-field full">
+                        <label for="emergency_contact">Emergency Contact Number *</label>
+                        <input type="tel" id="emergency_contact" name="emergency_contact" placeholder="Emergency contact mobile number" pattern="[6-9][0-9]{9}" maxlength="10" required>
+                    </div>
+
+                    <div class="booking-field full">
+                        <label for="special_requests">Special Requests</label>
+                        <textarea id="special_requests" name="special_requests" maxlength="500" placeholder="Any additional requirements or instructions..."></textarea>
+                    </div>
+
+                </div>
+
+                <div class="booking-security">
+                    <strong>🔒 Your information matters</strong><br> DriveX should collect only necessary booking information. Aadhaar collection is limited to the last four digits. Identity and contact information must be protected and accessible only
+                    to authorized personnel.
+                </div>
+
+                <button type="submit" class="booking-submit">
+                    Confirm My Booking →
+                </button>
+
+            </form>
+
+        </section>
+
+        <!-- VEHICLE SUMMARY -->
+
+        <aside class="booking-summary">
+
+            <div class="booking-car-icon">🚘</div>
+
+            <span class="eyebrow">YOUR SELECTED VEHICLE</span>
+
+            <h3>{{ vehicle }}</h3>
+
+            <p>
+                Your selected vehicle is ready for your next journey. Complete the booking details to continue.
+            </p>
+
+            <div class="booking-divider"></div>
+
+            <div class="booking-detail">
+                <span>Vehicle</span>
+                <span>{{ vehicle }}</span>
+            </div>
+
+            <div class="booking-detail">
+                <span>Reservation</span>
+                <span>DriveX Booking</span>
+            </div>
+
+            <div class="booking-detail">
+                <span>Payment</span>
+                <span>Not collected</span>
+            </div>
+
+            <div class="booking-divider"></div>
+
+            <div class="booking-security">
+                <strong>✓ Booking information</strong><br> Your booking will be associated with your DriveX account. This demonstration project does not process online payments.
+            </div>
+
+        </aside>
+
+    </main>
+
+    <footer class="footer">
+        <a href="/vehicles" class="logo">Drive<span>X</span></a>
+        <p>Drive beyond limits. Experience every journey.</p>
+        <small>© 2026 DriveX. All Rights Reserved.</small>
+    </footer>
+
+    <script>
+        const pickup = document.getElementById("pickup");
+        const dropoff = document.getElementById("dropoff");
+
+        const today = new Date();
+
+        const localToday = new Date(
+            today.getTime() - today.getTimezoneOffset() * 60000
+        ).toISOString().split("T")[0];
+
+        pickup.min = localToday;
+        dropoff.min = localToday;
+
+        pickup.addEventListener("change", function() {
+
+            dropoff.min = pickup.value || localToday;
+
+            if (dropoff.value && dropoff.value < pickup.value) {
+                dropoff.value = "";
+            }
+
+        });
+
+        document.getElementById("bookingForm").addEventListener("submit", function(event) {
+
+            if (dropoff.value < pickup.value) {
+                event.preventDefault();
+                alert("Return date cannot be before pickup date.");
+            }
+
+        });
+
+        const aadhaar = document.getElementById("aadhaar_last4");
+
+        aadhaar.addEventListener("input", function() {
+            this.value = this.value.replace(/[^0-9]/g, "").slice(0, 4);
+        });
+
+        const phoneFields = [
+            document.getElementById("phone"),
+            document.getElementById("emergency_contact")
+        ];
+
+        phoneFields.forEach(function(field) {
+            field.addEventListener("input", function() {
+                this.value = this.value.replace(/[^0-9]/g, "").slice(0, 10);
+            });
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>DriveX | My Trips</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .trips-hero {
+            padding: 65px 7% 45px;
+            background: radial-gradient(ellipse at 75% 0%, rgba(255, 90, 31, .15), transparent 55%), #0b0d12;
+        }
+        
+        .trips-hero-content {
+            max-width: 1150px;
+            margin: auto;
+        }
+        
+        .trips-hero h1 {
+            font-size: clamp(38px, 5vw, 55px);
+            letter-spacing: -2px;
+            margin: 13px 0;
+        }
+        
+        .trips-hero p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+        
+        .trips-container {
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 35px 25px 90px;
+        }
+        
+        .trips-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+        
+        .trips-heading h2 {
+            font-size: 25px;
+        }
+        
+        .trips-count {
+            padding: 9px 15px;
+            border: 1px solid rgba(255, 90, 31, .25);
+            background: rgba(255, 90, 31, .09);
+            color: #ff875d;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+        
+        .trips-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+        
+        .trip-card {
+            background: linear-gradient(145deg, #191d26, #101217);
+            border: 1px solid rgba(255, 255, 255, .09);
+            border-radius: 17px;
+            padding: 25px;
+            transition: .3s;
+        }
+        
+        .trip-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 90, 31, .35);
+        }
+        
+        .trip-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+        
+        .trip-icon {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            background: rgba(255, 90, 31, .12);
+            font-size: 24px;
+        }
+        
+        .trip-status {
+            padding: 8px 12px;
+            border-radius: 30px;
+            background: rgba(255, 90, 31, .1);
+            border: 1px solid rgba(255, 90, 31, .22);
+            color: #ff875d;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: .7px;
+        }
+        
+        .trip-card h3 {
+            font-size: 22px;
+            margin-bottom: 7px;
+            overflow-wrap: anywhere;
+        }
+        
+        .trip-card-subtitle {
+            color: #9298a5;
+            font-size: 11px;
+        }
+        
+        .trip-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, .08);
+            margin: 22px 0;
+        }
+        
+        .trip-dates {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .trip-date-label {
+            display: block;
+            color: #9298a5;
+            font-size: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .trip-date-value {
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+        
+        .trip-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 23px;
+        }
+        
+        .trip-reference {
+            color: #777e8b;
+            font-size: 10px;
+        }
+        
+        .trip-book-again {
+            color: #ff875d;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 800;
+        }
+        
+        .trip-book-again:hover {
+            color: white;
+        }
+        
+        .trips-empty {
+            padding: 65px 25px;
+            text-align: center;
+            border: 1px dashed rgba(255, 255, 255, .16);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, .02);
+        }
+        
+        .trips-empty-icon {
+            font-size: 47px;
+            margin-bottom: 18px;
+        }
+        
+        .trips-empty h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .trips-empty p {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.8;
+            margin-bottom: 23px;
+        }
+        
+        .trips-empty a {
+            display: inline-block;
+            padding: 13px 22px;
+            border-radius: 9px;
+            background: linear-gradient(135deg, #ff713d, #ef460e);
+            color: white;
+            font-size: 12px;
+            font-weight: 800;
+            text-decoration: none;
+        }
+        
+        @media(max-width: 700px) {
+            .trips-grid {
+                grid-template-columns: 1fr;
+            }
+            .trips-heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+        
+        @media(max-width: 450px) {
+            .trips-container {
+                padding-left: 5%;
+                padding-right: 5%;
+            }
+            .trip-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+    <nav class="navbar">
+
+        <a href="/vehicles" class="logo">
+            Drive<span>X</span>
+        </a>
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/vehicles">Vehicles</a>
+            <a href="/recommend">AI Recommendation</a>
+            <a href="/mytrips" class="active">My Trips</a>
+            <a href="/logout">Logout</a>
+        </div>
+
+    </nav>
+
+    <!-- HERO -->
+    <section class="trips-hero">
+
+        <div class="trips-hero-content">
+
+            <span class="eyebrow">YOUR PERSONAL DASHBOARD</span>
+
+            <h1>Every Journey,<br><span>One Place.</span></h1>
+
+            <p>
+                Keep track of your DriveX reservations and revisit the journeys you've planned.
+            </p>
+
+        </div>
+
+    </section>
+
+    <!-- BOOKINGS -->
+    <main class="trips-container">
+
+        <div class="trips-heading">
+
+            <div>
+                <span class="eyebrow">BOOKING HISTORY</span>
+                <h2>My Reservations</h2>
+            </div>
+
+            <span class="trips-count">
+                {{ trips|length }} BOOKING(S)
+            </span>
+
+        </div>
+
+        {% if trips %}
+
+        <div class="trips-grid">
+
+            {% for trip in trips %}
+
+            <article class="trip-card">
+
+                <div class="trip-card-top">
+
+                    <div class="trip-icon">🚘</div>
+
+                    <span class="trip-status">
+                                BOOKING SAVED
+                            </span>
+
+                </div>
+
+                <h3>{{ trip.vehicle }}</h3>
+
+                <p class="trip-card-subtitle">
+                    Your DriveX vehicle reservation
+                </p>
+
+                <div class="trip-divider"></div>
+
+                <div class="trip-dates">
+
+                    <div>
+                        <span class="trip-date-label">
+                                    PICKUP DATE
+                                </span>
+
+                        <span class="trip-date-value">
+                                    {{ trip.pickup }}
+                                </span>
+                    </div>
+
+                    <div>
+                        <span class="trip-date-label">
+                                    DROP-OFF DATE
+                                </span>
+
+                        <span class="trip-date-value">
+                                    {{ trip.dropoff }}
+                                </span>
+                    </div>
+
+                </div>
+
+                <div class="trip-divider"></div>
+
+                <div class="trip-card-footer">
+
+                    <span class="trip-reference">
+                                Booking #{{ trip.id }}
+                            </span>
+
+                    <a class="trip-book-again" href="{{ url_for('booking', vehicle=trip.vehicle) }}">
+                                BOOK AGAIN →
+                            </a>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <section class="trips-empty">
+
+            <div class="trips-empty-icon">🛣️</div>
+
+            <h3>No Trips Yet</h3>
+
+            <p>
+                Your next adventure is waiting. Explore our collection and make your first reservation.
+            </p>
+
+            <a href="/vehicles">
+                    Explore Vehicles →
+                </a>
+
+        </section>
+
+        {% endif %}
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+
+        <a href="/vehicles" class="logo">
+            Drive<span>X</span>
+        </a>
+
+        <p>Drive beyond limits. Experience every journey.</p>
+
+        <small>© 2026 DriveX. All Rights Reserved.</small>
+
+    </footer>
+
+</body>
+
+</html>
