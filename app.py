@@ -853,26 +853,25 @@ def logout():
     return redirect("/")
 
 
+
 # ==========================================
 # DATABASE INITIALIZATION
 # ==========================================
 
+with app.app_context():
+
+    os.makedirs(app.instance_path, exist_ok=True)
+
+    # Create database tables
+    db.create_all()
+
+    # Safely migrate existing database columns
+    migrate_database()
+
+
+# ==========================================
+# RUN APPLICATION
+# ==========================================
+
 if __name__ == "__main__":
-
-    with app.app_context():
-
-        os.makedirs(app.instance_path, exist_ok=True)
-
-        # Create tables if they do not exist
-        db.create_all()
-
-        # Safely add new booking columns
-        migrate_database()
-
-    app.run(debug=True)
-if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-        migrate_database()
-
-    app.run(debug=True)
+    app.run(debug=False)
